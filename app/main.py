@@ -11,7 +11,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
-dataset = load_dataset("pymmdrza/PERSIAN_FARSI_NARRATION", split="test")
+dataset = load_dataset("Thomcles/Persian-Farsi-Speech", split="train[:1%]")
 
 init_db()
 
