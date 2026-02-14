@@ -8,7 +8,7 @@ from app.db import Annotation, SessionLocal, init_db
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory="../static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 dataset = load_dataset("Thomcles/Persian-Farsi-Speech", split="train[:1%]")
