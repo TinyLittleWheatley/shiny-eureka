@@ -4,3 +4,4 @@ jinja2
 sqlalchemy
 datasets
 torchcodec
+torch
