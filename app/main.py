@@ -11,7 +11,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
-dataset = load_dataset("MohammadGholizadeh/filimo-farsi", split="dev[:1%]")
+dataset = load_dataset("Raziullah/librispeech_small_asr_fine-tune", split="test[:1%]")
 
 init_db()
 
