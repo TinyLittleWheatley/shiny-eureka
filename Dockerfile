@@ -1,5 +1,11 @@
 FROM python:3.11-slim
 
+# Install ffmpeg + any required OS packages
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /code
 
 COPY requirements.txt .
