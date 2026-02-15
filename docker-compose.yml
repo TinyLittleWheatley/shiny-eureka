@@ -4,7 +4,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ~/.cache/huggingface:/hf_ro:ro
+      - /home/hoosh/.cache/huggingface:/hf_ro:ro
       - ./data:/app
     environment:
       - HF_DATASETS_OFFLINE=1
