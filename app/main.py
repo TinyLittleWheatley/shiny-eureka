@@ -40,7 +40,7 @@ def get_next():
         existing = db.query(Annotation).filter_by(dataset_id=str(sample["id"])).first()
         if not existing:
 
-            audio_path = f"{AUDIO_DIR}/{sample['id']}.wav"
+            audio_path = f"{config.AUDIO_DIR}/{sample['id']}.wav"
 
             if not os.path.exists(audio_path):
                 sf.write(
