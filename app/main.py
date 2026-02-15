@@ -1,28 +1,26 @@
 import os
-from typing import TypedDict
 
 import soundfile as sf
-import torchcodec
 from datasets import DownloadConfig, load_dataset
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from app import config
 from app.db import Annotation, SessionLocal, init_db
 
-AUDIO_DIR = "audio_cache"
-os.makedirs(AUDIO_DIR, exist_ok=True)
+os.makedirs(config.AUDIO_DIR, exist_ok=True)
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-app.mount("/audio", StaticFiles(directory="audio_cache"), name="audio")
+app.mount("/audio", StaticFiles(directory=config.AUDIO_DIR), name="audio")
 templates = Jinja2Templates(directory="app/templates")
 
 dataset = load_dataset(
-    "Thomcles/Persian-Farsi-Speech",
-    split="test[:1%]",
+    config.DS_NAME,
+    split=config.DS_SPLIT,
     download_config=DownloadConfig(
         local_files_only=True,
     ),
