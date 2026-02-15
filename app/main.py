@@ -21,9 +21,7 @@ templates = Jinja2Templates(directory="app/templates")
 dataset = load_dataset(
     config.DS_NAME,
     split=config.DS_SPLIT,
-    download_config=DownloadConfig(
-        local_files_only=True,
-    ),
+    download_config=DownloadConfig(),
 )
 
 init_db()
