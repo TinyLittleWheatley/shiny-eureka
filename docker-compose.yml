@@ -7,8 +7,6 @@ services:
       - /home/hoosh/.cache/huggingface:/hf_ro
       - ./data:/app
     environment:
-      - HF_DATASETS_OFFLINE=1
-      - HF_HUB_OFFLINE=1
       - HF_HOME=/hf_ro
       - DS_NAME=MohammadGholizadeh/filimo-farsi
       - DS_SPLIT=test[:1%]
