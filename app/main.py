@@ -3,7 +3,7 @@ from typing import TypedDict
 
 import soundfile as sf
 import torchcodec
-from datasets import load_dataset
+from datasets import DownloadConfig, load_dataset
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -20,7 +20,11 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.mount("/audio", StaticFiles(directory="audio_cache"), name="audio")
 templates = Jinja2Templates(directory="app/templates")
 
-dataset = load_dataset("Raziullah/librispeech_small_asr_fine-tune", split="test[:1%]")
+dataset = load_dataset(
+    "Thomcles/Persian-Farsi-Speech",
+    split="test[:1%]",
+    download_config=DownloadConfig(local_files_only=True),
+)
 
 init_db()
 
