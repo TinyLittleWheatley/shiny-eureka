@@ -24,6 +24,7 @@ dataset = load_dataset(
     "Thomcles/Persian-Farsi-Speech",
     split="test[:1%]",
     download_config=DownloadConfig(local_files_only=True),
+    cache_dir="/hf_ro",
 )
 
 init_db()
