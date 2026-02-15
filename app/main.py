@@ -17,6 +17,7 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/audio", StaticFiles(directory="audio_cache"), name="audio")
 templates = Jinja2Templates(directory="app/templates")
 
 dataset = load_dataset("Raziullah/librispeech_small_asr_fine-tune", split="test[:1%]")
