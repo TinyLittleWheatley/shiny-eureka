@@ -1,17 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Audio Validator</title>
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Audio Validator</h2>
+<body class="bg-light">
 
-    <audio id="audio" controls></audio>
-    <br><br>
+<div class="container my-5">
 
-    <input id="labelInput" type="text" style="width:400px;" />
-    <button onclick="submit()">Submit</button>
+    <div class="text-center mb-4">
+        <h2>Audio Validator</h2>
+        <p class="text-muted">Listen, validate or edit the label, then submit.</p>
+    </div>
 
-    <script src="/static/script.js"></script>
+    <div class="card shadow-sm p-4 mb-4">
+        <div class="mb-3 text-center">
+            <audio id="audio" controls class="w-100"></audio>
+        </div>
+
+        <div class="mb-3">
+            <label for="labelInput" class="form-label">Label</label>
+            <input id="labelInput" type="text" class="form-control" placeholder="Edit label here">
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary" onclick="skipSample()">Skip</button>
+            <button class="btn btn-primary" onclick="submit()">Submit</button>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <small id="progress" class="text-muted">Loading...</small>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS Bundle (for optional interactive components) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/script.js"></script>
 </body>
 </html>
