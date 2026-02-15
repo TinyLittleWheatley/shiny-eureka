@@ -23,7 +23,10 @@ templates = Jinja2Templates(directory="app/templates")
 dataset = load_dataset(
     "Thomcles/Persian-Farsi-Speech",
     split="test[:1%]",
-    download_config=DownloadConfig(local_files_only=True),
+    download_config=DownloadConfig(
+        local_files_only=True,
+        cache_dir="/hf_ro",
+    ),
     cache_dir="/hf_ro",
 )
 
