@@ -25,9 +25,7 @@ dataset = load_dataset(
     split="test[:1%]",
     download_config=DownloadConfig(
         local_files_only=True,
-        cache_dir="/hf_ro",
     ),
-    cache_dir="/hf_ro",
 )
 
 init_db()
