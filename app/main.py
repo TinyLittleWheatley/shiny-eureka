@@ -1,3 +1,8 @@
+import os
+from typing import TypedDict
+
+import soundfile as sf
+import torchcodec
 from datasets import load_dataset
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -5,6 +10,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.db import Annotation, SessionLocal, init_db
+
+AUDIO_DIR = "audio_cache"
+os.makedirs(AUDIO_DIR, exist_ok=True)
 
 app = FastAPI()
 
@@ -28,10 +36,20 @@ def get_next():
     for sample in dataset:
         existing = db.query(Annotation).filter_by(dataset_id=str(sample["id"])).first()
         if not existing:
+
+            audio_path = f"{AUDIO_DIR}/{sample['id']}.wav"
+
+            if not os.path.exists(audio_path):
+                sf.write(
+                    audio_path,
+                    sample["audio"]["array"],
+                    sample["audio"]["sampling_rate"],
+                )
+
             return {
                 "id": sample["id"],
-                "audio": sample["audio"]["array"].tolist(),
                 "label": sample["text"],
+                "audio_url": f"/audio/{sample['id']}.wav",
             }
 
     return {"done": True}

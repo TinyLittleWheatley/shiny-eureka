@@ -10,14 +10,7 @@ async function loadNext() {
     }
 
     currentId = data.id;
-
-    const audioBlob = new Blob(
-        [new Float32Array(data.audio)],
-        { type: "audio/wav" }
-    );
-
-    const url = URL.createObjectURL(audioBlob);
-    document.getElementById("audio").src = url;
+    document.getElementById("audio").src = data.audio_url;
     document.getElementById("labelInput").value = data.label;
 }
 
