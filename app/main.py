@@ -122,9 +122,7 @@ async def submit(data: dict):
 async def skip(data: dict):
     db = SessionLocal()
     db.execute(
-        update(Annotation)
-        .where(Annotation.id == data["id"])
-        .values(label=data["label"], validated=False)
+        update(Annotation).where(Annotation.id == data["id"]).values(validated=False)
     )
     db.commit()
 
