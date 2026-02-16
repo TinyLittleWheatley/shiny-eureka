@@ -99,7 +99,7 @@ def get_next():
         )
 
     return {
-        "id": sample["id"],
+        "id": sample_id,
         "label": sample["text"],
         "audio_url": f"/audio/{sample['id']}.wav",
     }
