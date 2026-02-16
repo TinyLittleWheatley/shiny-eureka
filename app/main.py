@@ -40,7 +40,7 @@ def get_next():
     db = SessionLocal()
 
     with db.begin():
-        last_seen_id = db.scalar(select(func.max(Annotation.dataset_id)))
+        last_seen_id = db.scalar(select(func.max(Annotation.id)))
         if not last_seen_id:
             sample_id = 0
         elif last_seen_id < len(dataset) - 1:
