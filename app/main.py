@@ -1,6 +1,5 @@
 import os
-from datetime import datetime
-from time import timezone
+from datetime import datetime, timezone
 
 import soundfile as sf
 from datasets import DownloadConfig, load_dataset
