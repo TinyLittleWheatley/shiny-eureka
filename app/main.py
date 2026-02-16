@@ -104,7 +104,7 @@ def get_next():
             else:
                 sample_id += 1
 
-        db.add(Annotation(id=sample_id, last_loaded=datetime.now(timezone.utc)))
+        db.merge(Annotation(id=sample_id, last_loaded=datetime.now(timezone.utc)))
 
     sample = dataset[sample_id]
 
