@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import func, select
+from sqlalchemy import func, select, update
 
 from app import config
 from app.db import Annotation, SessionLocal, init_db
@@ -108,9 +108,11 @@ def get_next():
 @app.post("/submit")
 async def submit(data: dict):
     db = SessionLocal()
-
-    ann = Annotation(id=data["id"], label=data["label"], validated=True)
-    db.add(ann)
+    db.execute(
+        update(Annotation)
+        .where(Annotation.id == data["id"])
+        .values(label=data["label"], validated=True)
+    )
     db.commit()
 
     return {"status": "ok"}
@@ -119,9 +121,11 @@ async def submit(data: dict):
 @app.post("/skip")
 async def skip(data: dict):
     db = SessionLocal()
-
-    ann = Annotation(id=data["id"], validated=False)
-    db.add(ann)
+    db.execute(
+        update(Annotation)
+        .where(Annotation.id == data["id"])
+        .values(label=data["label"], validated=False)
+    )
     db.commit()
 
     return {"status": "ok"}
