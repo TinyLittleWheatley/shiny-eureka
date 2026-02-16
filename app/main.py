@@ -41,8 +41,8 @@ def get_next():
     with db.begin():
         last_seen_id = db.scalar(select(func.max(Annotation.id)))
         if not last_seen_id:
-            sample_id = 0
-        elif last_seen_id < len(dataset) - 1:
+            sample_id = 1
+        elif last_seen_id + 1 < len(dataset):
             sample_id = last_seen_id + 1
         else:
             sample_id = db.scalar(
@@ -58,8 +58,12 @@ def get_next():
                 .limit(1)
             )
 
-            if sample_id is None:
+            if (
+                sample_id is None
+            ):  # Let this be an identity check so the addition would immediately fail
                 return {"done": True}
+            else:
+                sample_id += 1
 
         db.add(Annotation(id=sample_id, last_loaded=datetime.now(timezone.utc)))
 
