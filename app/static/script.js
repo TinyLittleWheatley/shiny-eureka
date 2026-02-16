@@ -29,4 +29,16 @@ async function submit() {
     loadNext();
 }
 
+async function skipSample() {
+    await fetch("/skip", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            id: currentId,
+        })
+    });
+
+    loadNext();
+}
+
 loadNext();

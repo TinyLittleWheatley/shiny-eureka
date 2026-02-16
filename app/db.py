@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, create_engine
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, create_engine, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 DATABASE_URL = "sqlite:////data/data.db"
@@ -13,9 +13,9 @@ class Annotation(Base):
     __tablename__ = "annotations"
 
     id = Column(Integer, primary_key=True, index=True)
-    dataset_id = Column(String, unique=True, index=True)
     label = Column(String)
-    validated = Column(Boolean, default=False)
+    validated = Column(Boolean, default=None)
+    last_loaded = Column(DateTime, nullable=False, server_default=func.now())
 
 
 def init_db():
