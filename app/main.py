@@ -8,6 +8,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import func, select, update
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 
 from app import config
 from app.db import Annotation, SessionLocal, init_db
@@ -29,8 +31,7 @@ dataset = load_dataset(
 init_db()
 
 
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request):
+def get_progress():
     db = SessionLocal()
 
     progress = (
@@ -44,11 +45,29 @@ def index(request: Request):
         or 0
     )
 
+    return round(progress / len(dataset) * 100, 2)
+
+
+class ProgressHeaderMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # call the route handler
+        response: Response = await call_next(request)
+
+        response.headers["X-Progress"] = str(get_progress)
+        return response
+
+
+app.add_middleware(ProgressHeaderMiddleware)
+
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "progress": progress / len(dataset) * 100,
+            "progress": get_progress(),
             "dataset_name": config.DS_NAME,
         },
     )

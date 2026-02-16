@@ -41,4 +41,28 @@ async function skipSample() {
     loadNext();
 }
 
+const originalFetch = window.fetch;
+
+window.fetch = async function(...args) {
+    const response = await originalFetch(...args);
+
+    // Read progress header
+    const progress = response.headers.get("X-Progress");
+    if (progress !== null) {
+        updateProgress(parseFloat(progress));
+    }
+
+    return response;
+};
+
+function updateProgress(percent) {
+    const bar = document.getElementById("progressBar");
+    const text = document.getElementById("progressText");
+    if (bar && text) {
+        bar.style.width = percent + "%";
+        bar.setAttribute("aria-valuenow", percent);
+        text.textContent = percent + "%";
+    }
+}
+
 loadNext();
