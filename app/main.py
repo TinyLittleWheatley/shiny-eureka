@@ -31,7 +31,27 @@ init_db()
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    db = SessionLocal()
+
+    progress = (
+        db.scalar(
+            select(
+                func.count(
+                    Annotation.id,
+                ).filter(Annotation.validated != None)
+            )
+        )
+        or 0
+    )
+
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "progress": progress / len(dataset) * 100,
+            "dataset_name": config.DS_NAME,
+        },
+    )
 
 
 @app.get("/next")
