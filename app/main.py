@@ -53,7 +53,7 @@ class ProgressHeaderMiddleware(BaseHTTPMiddleware):
         # call the route handler
         response: Response = await call_next(request)
 
-        response.headers["X-Progress"] = str(get_progress)
+        response.headers["X-Progress"] = str(get_progress())
         return response
 
 
