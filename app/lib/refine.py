@@ -8,7 +8,7 @@ from app.services.dataset import load
 
 
 def make_filter(db: Session):
-    def filter(_, indices):
+    def filter(indices):
         valid_ids = (
             db.query(Annotation.id)
             .filter(
@@ -54,7 +54,7 @@ def refine(ds: Optional[Dataset] = None):
             make_filter(session),
             with_indices=True,
             batched=True,
-            input_columns=[],
+            input_columns=["label"],
         )
 
         ds.map(
