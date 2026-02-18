@@ -50,12 +50,17 @@ def refine(ds: Optional[Dataset] = None):
 
     with SessionLocal() as session:  # TODO: Check if it's ok to use one session
         # persist order
-        ds.add_column("index", range(len(ds)))  # pyright: ignore[reportArgumentType]
-
-        return ds.select(
-            get_valid_indices(session),
-        ).map(
-            make_map(session),
-            batched=True,
-            input_columns=["index"],
+        return (
+            ds.add_column(
+                "index",
+                range(len(ds)),  # pyright: ignore[reportArgumentType]
+            )
+            .select(
+                get_valid_indices(session),
+            )
+            .map(
+                make_map(session),
+                batched=True,
+                input_columns=["index"],
+            )
         )
