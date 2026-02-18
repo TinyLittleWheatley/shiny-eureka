@@ -21,7 +21,9 @@ def get_valid_indices(db: Session):
 
 
 def make_map(db: Session):
-    def map(batch, indices):
+    def map(batch):
+        indices = batch["index"]
+
         rows = (
             db.query(
                 Annotation.id,
@@ -47,11 +49,13 @@ def refine(ds: Optional[Dataset] = None):
         ds = load()
 
     with SessionLocal() as session:  # TODO: Check if it's ok to use one session
+        # persist order
+        ds.add_column("index", range(len(ds)))  # pyright: ignore[reportArgumentType]
+
         return ds.select(
             get_valid_indices(session),
         ).map(
             make_map(session),
             batched=True,
-            with_indices=True,
-            input_columns=["text"],
+            input_columns=["index"],
         )
