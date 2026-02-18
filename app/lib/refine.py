@@ -51,8 +51,8 @@ def refine(ds: Optional[Dataset] = None):
         ds = load()
 
     with SessionLocal() as session:  # TODO: Check if it's ok to use one session
-        # persist order
         return (
+            # persist order
             ds.add_column(
                 "index",
                 range(len(ds)),  # pyright: ignore[reportArgumentType]
@@ -61,10 +61,12 @@ def refine(ds: Optional[Dataset] = None):
                 make_filter(session),
                 batched=True,
                 input_columns=["index"],
+                load_from_cache_file=False,
             )
             .map(
                 make_map(session),
                 batched=True,
                 input_columns=["index"],
+                load_from_cache_file=False,
             )
         )
