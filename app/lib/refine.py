@@ -7,23 +7,27 @@ from app.services.database import Annotation, SessionLocal
 from app.services.dataset import load
 
 
-def get_valid_indices(db: Session):
-    return [
-        i
-        for i, in db.query(
-            Annotation.id,
-        )
-        .filter(
-            Annotation.validated == True,
-        )
-        .all()
-    ]
+def make_filter(db: Session):
+    def filter(indices):
+        valid_indices = {
+            i
+            for i, in db.query(
+                Annotation.id,
+            )
+            .filter(
+                Annotation.validated == True,
+                Annotation.id.in_(indices),
+            )
+            .all()
+        }
+
+        return [index in valid_indices for index in indices]
+
+    return filter
 
 
 def make_map(db: Session):
-    def map(batch):
-        indices = batch["index"]
-
+    def map(indices):
         rows = (
             db.query(
                 Annotation.id,
@@ -35,11 +39,9 @@ def make_map(db: Session):
 
         id_to_label = {row.id: row.label for row in rows}
 
-        batch["text"] = [
-            id_to_label[idx] for idx in indices  # Or .get; it fails fast now.
-        ]
-
-        return batch
+        return {
+            "text": [id_to_label[idx] for idx in indices]  # Or .get; it fails fast now.
+        }
 
     return map
 
@@ -55,8 +57,8 @@ def refine(ds: Optional[Dataset] = None):
                 "index",
                 range(len(ds)),  # pyright: ignore[reportArgumentType]
             )
-            .select(
-                get_valid_indices(session),
+            .filter(
+                make_filter(session),
             )
             .map(
                 make_map(session),
