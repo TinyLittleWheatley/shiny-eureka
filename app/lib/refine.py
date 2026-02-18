@@ -1,49 +1,46 @@
 from typing import Optional
 
 from datasets import Dataset
-from sqlalchemy.orm import Session
 
 from app.services.database import Annotation, SessionLocal
 from app.services.dataset import load
 
 
-def make_filter(db: Session):
-    def filter(indices):
-        valid_indices = {
-            i
-            for i, in db.query(
-                Annotation.id,
-            )
-            .filter(
-                Annotation.validated == True,
-                Annotation.id.in_(indices),
-            )
-            .all()
-        }
+def filter(indices):
+    db = SessionLocal()
 
-        return [index in valid_indices for index in indices]
-
-    return filter
-
-
-def make_map(db: Session):
-    def map(indices):
-        rows = (
-            db.query(
-                Annotation.id,
-                Annotation.label,
-            )
-            .filter(Annotation.id.in_(indices))
-            .all()
+    valid_indices = {
+        i
+        for i, in db.query(
+            Annotation.id,
         )
+        .filter(
+            Annotation.validated == True,
+            Annotation.id.in_(indices),
+        )
+        .all()
+    }
 
-        id_to_label = {row.id: row.label for row in rows}
+    return [index in valid_indices for index in indices]
 
-        return {
-            "text": [id_to_label[idx] for idx in indices]  # Or .get; it fails fast now.
-        }
 
-    return map
+def map(indices):
+    db = SessionLocal()
+
+    rows = (
+        db.query(
+            Annotation.id,
+            Annotation.label,
+        )
+        .filter(Annotation.id.in_(indices))
+        .all()
+    )
+
+    id_to_label = {row.id: row.label for row in rows}
+
+    return {
+        "text": [id_to_label[idx] for idx in indices]  # Or .get; it fails fast now.
+    }
 
 
 def refine(ds: Optional[Dataset] = None):
@@ -58,12 +55,12 @@ def refine(ds: Optional[Dataset] = None):
                 range(len(ds)),  # pyright: ignore[reportArgumentType]
             )
             .filter(
-                make_filter(session),
+                filter,
                 batched=True,
                 input_columns=["index"],
             )
             .map(
-                make_map(session),
+                map,
                 batched=True,
                 input_columns=["index"],
             )
