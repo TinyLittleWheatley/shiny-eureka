@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 import soundfile as sf
 from datasets import DownloadConfig, load_dataset
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Path, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -18,9 +18,19 @@ os.makedirs(config.AUDIO_DIR, exist_ok=True)
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-app.mount("/audio", StaticFiles(directory=config.AUDIO_DIR), name="audio")
-templates = Jinja2Templates(directory="app/templates")
+app.mount(
+    "/static",
+    StaticFiles(directory=config.ASSETS_DIR + "/static"),
+    name="static",
+)
+
+app.mount(
+    "/audio",
+    StaticFiles(directory=config.AUDIO_DIR),
+    name="audio",
+)
+
+templates = Jinja2Templates(directory=config.ASSETS_DIR + "/templates")
 
 dataset = load_dataset(
     config.DS_NAME,

@@ -12,3 +12,4 @@ def ge(name):
 DS_NAME = ge("DS_NAME")
 DS_SPLIT = ge("DS_SPLIT")
 AUDIO_DIR = getenv("AUDIO_DIR", "audio_cache")
+ASSETS_DIR = getenv("ASSETS_DIR", "app/web")
