@@ -59,6 +59,8 @@ def refine(ds: Optional[Dataset] = None):
             )
             .filter(
                 make_filter(session),
+                batched=True,
+                input_columns=["index"],
             )
             .map(
                 make_map(session),
