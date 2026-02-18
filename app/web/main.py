@@ -2,8 +2,7 @@ import os
 from datetime import datetime, timezone
 
 import soundfile as sf
-from datasets import DownloadConfig, load_dataset
-from fastapi import FastAPI, Path, Request
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -12,7 +11,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
 from app import config
-from app.db import Annotation, SessionLocal, init_db
+from app.services.database import Annotation, SessionLocal, init_db
+from app.services.dataset import load
 
 os.makedirs(config.AUDIO_DIR, exist_ok=True)
 
@@ -32,11 +32,7 @@ app.mount(
 
 templates = Jinja2Templates(directory=config.ASSETS_DIR + "/templates")
 
-dataset = load_dataset(
-    config.DS_NAME,
-    split=config.DS_SPLIT,
-    download_config=DownloadConfig(),
-)
+dataset = load()
 
 init_db()
 
