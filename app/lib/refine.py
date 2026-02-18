@@ -36,7 +36,7 @@ def make_map(db: Session):
 
         id_to_label = {row.id: row.label for row in rows}
 
-        batch["label"] = [
+        batch["text"] = [
             id_to_label[idx] for idx in indices  # Or .get; it fails fast now.
         ]
 
@@ -54,7 +54,7 @@ def refine(ds: Optional[Dataset] = None):
             make_filter(session),
             with_indices=True,
             batched=True,
-            input_columns=["label"],
+            input_columns=["text"],
         )
 
         ds.map(
