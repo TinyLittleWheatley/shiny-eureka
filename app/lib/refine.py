@@ -47,20 +47,21 @@ def refine(ds: Optional[Dataset] = None):
     if ds is None:
         ds = load()
 
-    return (
+    with SessionLocal() as session:  # TODO: Check if it's ok to use one session
         # persist order
-        ds.add_column(
-            "index",
-            range(len(ds)),  # pyright: ignore[reportArgumentType]
+        return (
+            ds.add_column(
+                "index",
+                range(len(ds)),  # pyright: ignore[reportArgumentType]
+            )
+            .filter(
+                filter,
+                batched=True,
+                input_columns=["index"],
+            )
+            .map(
+                map,
+                batched=True,
+                input_columns=["index"],
+            )
         )
-        .filter(
-            filter,
-            batched=True,
-            input_columns=["index"],
-        )
-        .map(
-            map,
-            batched=True,
-            input_columns=["index"],
-        )
-    )
