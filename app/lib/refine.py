@@ -8,7 +8,7 @@ from app.services.dataset import load
 
 
 def make_filter(db: Session):
-    def filter(indices):
+    def filter(_, indices):
         valid_ids = (
             db.query(Annotation.id)
             .filter(
