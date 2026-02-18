@@ -54,14 +54,14 @@ def refine(ds: Optional[Dataset] = None):
             make_filter(session),
             with_indices=True,
             batched=True,
-            input_columns=["text"],
+            input_columns=[],
         )
 
         ds.map(
             make_map(session),
             batched=True,
             with_indices=True,
-            input_columns=[],
+            input_columns=["text"],
         )
 
     return ds
