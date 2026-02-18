@@ -8,13 +8,16 @@ from app.services.dataset import load
 
 
 def get_valid_indices(db: Session):
-    return (
-        db.query(Annotation.id)
+    return [
+        i
+        for i, in db.query(
+            Annotation.id,
+        )
         .filter(
             Annotation.validated == True,
         )
         .all()
-    )
+    ]
 
 
 def make_map(db: Session):
